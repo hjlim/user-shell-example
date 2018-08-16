@@ -1,0 +1,17 @@
+shared:
+    image: node:6
+jobs:
+    # This job runs in sh will fail because `source` is not available in sh
+    test-sh:
+        steps:
+            - fail: echo "echo hello" > /tmp/test && source /tmp/test
+        requires: [~pr, ~commit]
+        
+    # This job runs in bash will pass because `source` is available in bash
+    test-bash:
+        # Set USER_SHELL_BIN to bash to run the in bash
+        environment:
+            USER_SHELL_BIN: bash
+        steps:
+            - pass: echo "echo hello" > /tmp/test && source /tmp/test
+        requires: [~pr, ~commit]
